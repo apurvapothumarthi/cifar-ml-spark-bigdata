@@ -1,0 +1,15 @@
+from pyspark import SparkContext 
+from pyspark.streaming import StreamingContext
+from pyspark.sql import SQLContext
+import json
+
+sc = SparkContext()
+ssc = StreamingContext(sc, 1)
+sqlc = SQLContext(sc)
+socket_stream = ssc.socketTextStream("localhost", 6100)
+lines = socket_stream.window( 20 )
+
+lines.pprint()
+
+ssc.start()
+ssc.awaitTermination()

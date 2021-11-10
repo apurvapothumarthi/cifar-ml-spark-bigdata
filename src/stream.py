@@ -8,6 +8,7 @@ import argparse
 import numpy as np
 import pandas as pd
 from tqdm.auto import tqdm
+from pathlib import Path
 
 # Run using python3 stream.py to use CIFAR dataset and default batch_size as 100
 # Run using python3 stream.py -f <input_file> -b <batch_size> to use a custom file/dataset and batch size
@@ -39,7 +40,8 @@ def connectTCP():   # connect to the TCP server -- there is no need to modify th
 # separate function to stream CIFAR batches since the format is different
 def sendCIFARBatchFileToSpark(tcp_connection, input_batch_file):
     # load the entire dataset
-    with open(f'cifar/{input_batch_file}', 'rb') as batch_file:
+    data_path =str(Path(__file__).parents[1])
+    with open(data_path+f'/inputs/{input_batch_file}', 'rb') as batch_file:
         batch_data = pickle.load(batch_file, encoding='bytes')
 
     # obtain image data and labels
