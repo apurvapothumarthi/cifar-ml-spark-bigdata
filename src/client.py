@@ -25,13 +25,20 @@ def batch_convert(batch_record):
 	return np.array(data_batch)
 
 def image_normalize(batch_record):
-	#todo
-	pass
+	'''
+	Takes the numpy arrays from batch_convert and returns list of tuples of
+	the form : (numpy array of normalized pixels, class label)
+	'''
+	normalized_img = []
+	for img in batch_record:
+		new_record = img[:-1]/255
+		normalized_img.append((np.array(new_record),img[-1]))
+	return normalized_img
 
 pixel_arrays = socket_stream.map(batch_convert)
-#normalized_pixels = pixel_arrays.map(image_normalize)
+normalized_pixels = pixel_arrays.map(image_normalize)
 
-pixel_arrays.pprint(10)
+normalized_pixels.pprint(10)
 
 ssc.start()
 ssc.awaitTermination()
