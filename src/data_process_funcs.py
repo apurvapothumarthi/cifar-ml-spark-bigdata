@@ -24,7 +24,7 @@ def image_normalize(batch_record):
 	for img in batch_record:
 		new_record = img/255
 		normalized_img.append(np.array(new_record))
-	return normalized_img
+	return np.array(normalized_img)
 
 def image_center(batch_record):
 	'''
@@ -34,4 +34,15 @@ def image_center(batch_record):
 	for img in batch_record:
 		new_record = img - np.mean(img)
 		center_img.append(new_record)
-	return center_img
+	return np.array(center_img)
+
+def image_standardize(batch_record):
+	'''
+	Standardize the image by ensuring the mean of the pixel values is 0
+	and standard deviation is 1
+	'''
+	std_img = []
+	for img in batch_record:
+		new_record = (img - np.mean(img))/np.std(img)
+		std_img.append(new_record)
+	return np.array(std_img)

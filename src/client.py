@@ -13,9 +13,11 @@ X = pixel_arrays.map(lambda x: x[:,:-1])
 Y = pixel_arrays.map(lambda y: y[:,-1])
 X_norm = X.map(dpf.image_normalize)
 X_centered = X_norm.map(dpf.image_center)
+X_std = X_centered.map(dpf.image_standardize)
 
-X_norm.pprint(10)
-X_centered.pprint(10)
+#X_norm.pprint(10)
+#X_centered.pprint(10)
+X_std.pprint(10)
 
 ssc.start()
 ssc.awaitTermination()
