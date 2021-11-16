@@ -25,3 +25,13 @@ def image_normalize(batch_record):
 		new_record = img/255
 		normalized_img.append(np.array(new_record))
 	return normalized_img
+
+def image_center(batch_record):
+	'''
+	Centers the image by ensuring the mean of the pixel values is 0
+	'''
+	center_img = []
+	for img in batch_record:
+		new_record = img - np.mean(img)
+		center_img.append(new_record)
+	return center_img
