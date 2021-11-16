@@ -4,10 +4,10 @@
 
 #### To run the project:
 ``` 
-cd cifar-ml-spark-bigdata
-python3 src/stream.py -f cifar -b 20
+cd cifar-ml-spark-bigdata/src
+python3 stream.py -f cifar -b 20
 ```
 in a new terminal window:
 ```
-$SPARK_HOME/bin/spark-submit src/client.py 2>../log.txt
+$SPARK_HOME/bin/spark-submit client.py 2>../log.txt
 ```
