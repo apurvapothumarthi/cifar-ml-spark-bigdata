@@ -18,7 +18,7 @@ def driver_function(rdd):
 	print(numpy_batch)
 	print(np.shape(numpy_batch))
 	print("--------------------------------")
-	
+
 
 socket_stream.foreachRDD(driver_function)
 
