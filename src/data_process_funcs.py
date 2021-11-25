@@ -46,3 +46,12 @@ def image_standardize(batch_record):
 		new_record = (img - np.mean(img))/np.std(img)
 		std_img.append(new_record)
 	return np.array(std_img)
+
+def image_preprocess(batch_record):
+	'''
+	Applies all the preprocessing functions to the image array
+	'''
+	batch_record = image_normalize(batch_record)
+	batch_record = image_center(batch_record)
+	batch_record = image_standardize(batch_record)
+	return batch_record
