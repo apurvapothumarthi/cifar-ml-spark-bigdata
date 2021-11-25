@@ -23,4 +23,4 @@ def driver_function(rdd):
 socket_stream.foreachRDD(driver_function)
 
 ssc.start()
-ssc.awaitTermination() 
+ssc.awaitTermination()
