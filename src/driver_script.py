@@ -3,6 +3,7 @@ from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 from pyspark.sql import SQLContext
 import data_process_funcs as dpf
+import model_funcs as mdf
 import sklearn.linear_model as sk_linear
 
 sc = SparkContext()
@@ -11,7 +12,9 @@ sqlc = SQLContext(sc)
 socket_stream = ssc.socketTextStream("localhost", 6100)
 
 #global model
-model = sk_linear.SGDClassifier()
+Perceptron = sk_linear.Perceptron()
+SGDClassifier = sk_linear.SGDClassifier()
+PassiveAggressiveClassifier = sk_linear.PassiveAggressiveClassifier()
 
 def driver_function(rdd):
 	json_string_list = rdd.take(1)
@@ -28,17 +31,24 @@ def driver_function(rdd):
 	X_train_norm = dpf.image_preprocess(X_train)
 	X_test_norm = dpf.image_preprocess(X_test)
 	
-	model.partial_fit(X_train_norm, Y_train, classes=range(0,10))
+	#partial_fit the models
+	Perceptron.partial_fit(X_train_norm, Y_train, classes=range(0,10))
+	SGDClassifier.partial_fit(X_train_norm, Y_train, classes=range(0,10))
+	PassiveAggressiveClassifier.partial_fit(X_train_norm, Y_train, classes=range(0,10))
+	
 	#DEBUG---To be deleted later!!!
 	print("Entered the driver function")
 	print("--------------------------------")
-	print("model score:")
-	print(model.score(X_test_norm,Y_test))
+	print("model scores:")
+	print("Perceptron:",Perceptron.score(X_test_norm,Y_test))
+	print("SGDClassifier:",SGDClassifier.score(X_test_norm,Y_test))
+	print("PassiveAggressiveClassifier:",PassiveAggressiveClassifier.score(X_test_norm,Y_test))
 	print("================================")
 	
 
 socket_stream.foreachRDD(driver_function)
 
 ssc.start()
-ssc.awaitTermination(3000)
+ssc.awaitTermination(600)
 ssc.stop()
+mdf.model_export(Perceptron,SGDClassifier,PassiveAggressiveClassifier)
