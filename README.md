@@ -2,12 +2,13 @@
 
 #### Original dataset source:  [Cifar Image Dataset](http://https://www.cs.toronto.edu/~kriz/cifar.html "Cifar Image Dataset")
 
-#### To run the project:
+### To run the project:
 ``` 
 cd cifar-ml-spark-bigdata/src
-python3 stream.py -f cifar -b 200
+./run.sh
 ```
-in a new terminal window:
-```
-$SPARK_HOME/bin/spark-submit driver_script.py 2>../log.txt
-```
+### Working of the project:
+* `run.sh` removes any previous .sav models in the models directory and starts both the `driver_script.py` and `stream.py` files
+* The `driver_script.py` connects to the given IP address and port and begins receiving the batches of training data
+* For each Dstream, the `foreachRDD` function is called to preprocess the data and train the globally declared incremental models
+* In the end the models are saved into separate `.sav` files under the models directory
