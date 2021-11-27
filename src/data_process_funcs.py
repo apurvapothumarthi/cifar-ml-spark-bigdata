@@ -47,10 +47,23 @@ def image_standardize(batch_record):
 		std_img.append(new_record)
 	return np.array(std_img)
 
+def image_greyscale(batch_record):
+	'''
+	Greycales the RGB image vector, reduces dimension from 32 x 32 x 3 
+	to 32 x 32
+	'''
+	grey_img = []
+	for img in batch_record:
+		img = np.reshape(img,(3,-1))
+		img = np.mean(img, axis=0)
+		grey_img.append(img)
+	return np.array(grey_img)
+
 def image_preprocess(batch_record):
 	'''
 	Applies all the preprocessing functions to the image array
 	'''
+	batch_record = image_greyscale(batch_record)
 	batch_record = image_normalize(batch_record)
 	batch_record = image_center(batch_record)
 	batch_record = image_standardize(batch_record)

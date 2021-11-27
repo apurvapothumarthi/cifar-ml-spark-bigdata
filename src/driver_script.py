@@ -19,24 +19,26 @@ def driver_function(rdd):
 		return
 	#Converting back of JSON strings to numpy array
 	numpy_batch = dpf.batch_convert(json_string_list[0])
-	X_train = numpy_batch[:-10,:-1]
+	X_train = numpy_batch[:,:-1]
 	X_test = numpy_batch[-10:,:-1]
-	Y_train = numpy_batch[:-10,-1]
+	Y_train = numpy_batch[:,-1]
 	Y_test = numpy_batch[-10:,-1]
 	
 	#preprocessing the training features
 	X_train_norm = dpf.image_preprocess(X_train)
+	X_test_norm = dpf.image_preprocess(X_test)
+	
 	model.partial_fit(X_train_norm, Y_train, classes=range(0,10))
 	#DEBUG---To be deleted later!!!
 	print("Entered the driver function")
 	print("--------------------------------")
 	print("model score:")
-	print(model.score(X_test,Y_test))
-	#print(X_train,Y_train,X_test,Y_test,sep="\n")
+	print(model.score(X_test_norm,Y_test))
 	print("================================")
 	
 
 socket_stream.foreachRDD(driver_function)
 
 ssc.start()
-ssc.awaitTermination()
+ssc.awaitTermination(3000)
+ssc.stop()
