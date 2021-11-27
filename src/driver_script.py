@@ -35,7 +35,7 @@ def driver_function(rdd):
 	Perceptron.partial_fit(X_train_norm, Y_train, classes=range(0,10))
 	SGDClassifier.partial_fit(X_train_norm, Y_train, classes=range(0,10))
 	PassiveAggressiveClassifier.partial_fit(X_train_norm, Y_train, classes=range(0,10))
-	
+	'''
 	#DEBUG---To be deleted later!!!
 	print("Entered the driver function")
 	print("--------------------------------")
@@ -44,11 +44,11 @@ def driver_function(rdd):
 	print("SGDClassifier:",SGDClassifier.score(X_test_norm,Y_test))
 	print("PassiveAggressiveClassifier:",PassiveAggressiveClassifier.score(X_test_norm,Y_test))
 	print("================================")
-	
+	'''
 
 socket_stream.foreachRDD(driver_function)
 
 ssc.start()
-ssc.awaitTermination(600)
+ssc.awaitTermination(650)
 ssc.stop()
 mdf.model_export(Perceptron,SGDClassifier,PassiveAggressiveClassifier)
