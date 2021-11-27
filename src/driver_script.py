@@ -2,8 +2,7 @@ from numpy import mod
 from pyspark import SparkContext 
 from pyspark.streaming import StreamingContext
 from pyspark.sql import SQLContext
-import data_process_funcs as dpf
-import model_funcs as mdf
+import custom_funcs as cf
 import sklearn.linear_model as sk_linear
 
 sc = SparkContext()
@@ -21,15 +20,15 @@ def driver_function(rdd):
 	if len(json_string_list) < 1:
 		return
 	#Converting back of JSON strings to numpy array
-	numpy_batch = dpf.batch_convert(json_string_list[0])
+	numpy_batch = cf.batch_convert(json_string_list[0])
 	X_train = numpy_batch[:,:-1]
 	X_test = numpy_batch[-10:,:-1]
 	Y_train = numpy_batch[:,-1]
 	Y_test = numpy_batch[-10:,-1]
 	
 	#preprocessing the training features
-	X_train_norm = dpf.image_preprocess(X_train)
-	X_test_norm = dpf.image_preprocess(X_test)
+	X_train_norm = cf.image_preprocess(X_train)
+	X_test_norm = cf.image_preprocess(X_test)
 	
 	#partial_fit the models
 	Perceptron.partial_fit(X_train_norm, Y_train, classes=range(0,10))
@@ -51,4 +50,4 @@ socket_stream.foreachRDD(driver_function)
 ssc.start()
 ssc.awaitTermination(650)
 ssc.stop()
-mdf.model_export(Perceptron,SGDClassifier,PassiveAggressiveClassifier)
+cf.model_export(Perceptron,SGDClassifier,PassiveAggressiveClassifier)

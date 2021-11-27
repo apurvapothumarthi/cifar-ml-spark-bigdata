@@ -1,7 +1,8 @@
 import json
 import numpy as np
+import pickle
 
-#functions
+# Preprocessing Functions
 def batch_convert(batch_record):
 	'''
 	Takes the Batch and converts it into a json object before creating
@@ -68,3 +69,18 @@ def image_preprocess(batch_record):
 	batch_record = image_center(batch_record)
 	batch_record = image_standardize(batch_record)
 	return batch_record
+
+# Model Functions
+def models_init(*model_name_list):
+	'''
+	Hyperparameter tuning; initialize model objects
+	'''
+	pass
+
+def model_export(*model_list):
+	'''
+	Export model objects to individual files
+	'''
+	for model in model_list:
+		filename = '../models/'+f'{model}'.strip('()')+'.sav'
+		pickle.dump(model,open(filename,'wb+'))
