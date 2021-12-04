@@ -84,3 +84,34 @@ def model_export(*model_list):
 	for model in model_list:
 		filename = '../models/'+f'{model}'.strip('()')+'.sav'
 		pickle.dump(model,open(filename,'wb+'))
+
+#Sequential K mean Clustering
+class SequentialKMeans():
+
+	def __init__(self,n_cluster=1, alpha = 0.1):
+		self.n_cluster = n_cluster
+		self.alpha = alpha
+		self.centroids = []
+
+	def euclid(self,x1,x2):
+		temp = np.array(x1)-np.array(x2)
+		return np.linalg.norm(temp)
+
+	def fit(self,X):
+		for x in X:
+			if len(self.centroids) < self.n_cluster:
+				self.centroids.append(x)
+			else:
+				self.centroids = np.array(self.centroids).astype('float64')
+				dists = [self.euclid(x,centr) for centr in self.centroids]
+				idx = np.argmin(dists)
+				self.centroids[idx] += self.alpha*(x-self.centroids[idx])
+	def predict(self,X):
+		pred = []
+		for x in X:
+			dists = [self.euclid(x,centr) for centr in self.centroids]
+			label = np.argmin(dists)
+			pred.append(label)
+		return np.array(pred)
+				
+
