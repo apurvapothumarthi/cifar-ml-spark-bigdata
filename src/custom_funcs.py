@@ -77,13 +77,13 @@ def models_init(*model_name_list):
 	'''
 	pass
 
-def model_export(*model_list):
+def model_export(prefix,*model_list):
 	'''
 	Export model objects to individual files
 	'''
-	for model in model_list:
-		filename = '../models/'+f'{model}'.strip('()')+'.sav'
-		pickle.dump(model,open(filename,'wb+'))
+	for i in range(len(model_list)):
+		filename = '../models/'+prefix+'_model'+str(i+1)+'.sav'
+		pickle.dump(model_list[i],open(filename,'wb+'))
 
 #Sequential K mean Clustering
 class SequentialKMeans():
