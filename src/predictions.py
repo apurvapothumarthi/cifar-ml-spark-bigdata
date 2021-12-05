@@ -10,6 +10,8 @@ totallist = listdir(dir_path)
 clusterfile = totallist[0]
 modelfiles = totallist[1:-1]
 cluster_model = pickle.load(open(dir_path+clusterfile, 'rb'))
+print(clusterfile[:-3]+"csv")
+f = open(clusterfile[:-3]+"csv","wb+")
 
 sc = SparkContext()
 ssc = StreamingContext(sc, 5)
@@ -23,15 +25,16 @@ def cluster_predictions(rdd):
 	X_test = numpy_batch[:,:-1]
 	Y_test = numpy_batch[:,-1]
 	pred = cluster_model.predict(X_test)
+	pred_Y = np.vstack((pred, Y_test)).T
+	np.savetxt(f,pred_Y,fmt="%d", delimiter=",")
 	print("--------------------------------")
 	print("model:",cluster_model)
 	print("pred:")
-	print(pred)
-	print("actual:")
-	print(Y_test)
+	print(pred_Y)
 	print("================================")
 
 socket_stream.foreachRDD(cluster_predictions)
 ssc.start()
 ssc.awaitTermination(650)
 ssc.stop()
+f.close()
