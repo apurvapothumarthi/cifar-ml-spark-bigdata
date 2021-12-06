@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import pickle
+import sklearn.metrics as skm
 
 # Preprocessing Functions
 def batch_convert(batch_record):
@@ -84,6 +85,22 @@ def model_export(prefix,*model_list):
 	for i in range(len(model_list)):
 		filename = '../models/'+prefix+'_model'+str(i+1)+'.sav'
 		pickle.dump(model_list[i],open(filename,'wb+'))
+
+def evaluation_metrics(pred,true,labels=None):
+	'''
+	Returns list of [confusion matrix, accuracy, 
+			precision array, recall array,
+			f1score array]
+	'''
+	confusion_matrix = skm.confusion_matrix(true,pred)
+	accuracy = skm.accuracy_score(true,pred)
+	f1Score = skm.f1_score(true,pred,average=None)
+	precision = skm.precision_score(true,pred,average=None)
+	recall = skm.recall_score(true,pred,average=None)
+
+	return [confusion_matrix,accuracy,
+		precision,recall,
+		f1Score]
 
 #Sequential K mean Clustering
 class SequentialKMeans():

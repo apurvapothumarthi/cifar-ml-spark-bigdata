@@ -29,13 +29,15 @@ def model_predictions(rdd):
 	X_test_norm = cf.image_preprocess(X_test)
 	print("--------------------------------")
 	for model in models:
+		pred = model.predict(X_test_norm)
 		print("model:",model)
-		#print("pred:")
-		print(model.predict(X_test_norm))
-		print("actual:")
-		print(Y_test)
-		print("score:")
-		print(model.score(X_test_norm,Y_test))
+		print("metrics:")
+		metrics = cf.evaluation_metrics(pred,Y_test,range(10))
+		print("Confusion matrix:",metrics[0],sep="\n")
+		print("Accuracy:",metrics[1],sep="\n")
+		print("Precisions:",metrics[2],sep="\n")
+		print("Recalls:",metrics[3],sep="\n")
+		print("F1 Scores:",metrics[4],sep="\n")
 	print("================================")
 
 def cluster_predictions(rdd):
@@ -48,15 +50,17 @@ def cluster_predictions(rdd):
 	pred = cluster_model.predict(X_test)
 	pred_Y = np.vstack((pred, Y_test)).T
 	np.savetxt(f,pred_Y,fmt="%d", delimiter=",")
+	'''
 	print("--------------------------------")
 	print("model:",cluster_model)
 	print("pred:")
 	print(pred_Y)
 	print("================================")
+	'''
 
 socket_stream.foreachRDD(model_predictions)
 socket_stream.foreachRDD(cluster_predictions)
 ssc.start()
-ssc.awaitTermination(650)
+ssc.awaitTermination(200)
 ssc.stop()
 f.close()
