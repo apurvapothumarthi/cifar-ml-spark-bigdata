@@ -12,3 +12,10 @@ cd cifar-ml-spark-bigdata/src
 * The `driver_script.py` connects to the given IP address and port and begins receiving the batches of training data
 * For each Dstream, the `foreachRDD` function is called to preprocess the data and train the globally declared incremental models
 * In the end the models are saved into separate `.sav` files under the models directory
+* The `run.sh` calls upon `predictions.py` and `stream.py` again to evaluate the testing batch and finally saves the results.
+
+### Libraries used:
+* `pyspark`
+* `sklearn`
+* `numpy`
+* `pickle`
