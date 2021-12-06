@@ -4,7 +4,7 @@ from pyspark.streaming import StreamingContext
 from pyspark.mllib.clustering import StreamingKMeans
 import custom_funcs as cf
 import sklearn.linear_model as sk_linear
-b = 3072*100
+
 sc = SparkContext()
 ssc = StreamingContext(sc, 5)
 socket_stream = ssc.socketTextStream("localhost", 6100)
@@ -13,9 +13,9 @@ socket_stream = ssc.socketTextStream("localhost", 6100)
 Perceptron = sk_linear.Perceptron()
 SGDClassifier = sk_linear.SGDClassifier()
 PassiveAggressiveClassifier = sk_linear.PassiveAggressiveClassifier()
+models = [Perceptron,SGDClassifier,PassiveAggressiveClassifier]
 
 #cluster model
-#streamingkmeans = cf.SequentialKMeans(n_cluster=10)
 Kcluster = cf.SequentialKMeans(10)
 
 def driver_function(rdd):
@@ -31,20 +31,9 @@ def driver_function(rdd):
 	X_train_norm = cf.image_preprocess(X_train)
 	
 	#partial_fit the models
-	Perceptron.partial_fit(X_train_norm, Y_train, classes=range(0,10))
-	SGDClassifier.partial_fit(X_train_norm, Y_train, classes=range(0,10))
-	PassiveAggressiveClassifier.partial_fit(X_train_norm, Y_train, classes=range(0,10))
+	for model in models:
+		model.partial_fit(X_train_norm, Y_train, classes=range(10))
 	Kcluster.fit(X_train)
-	'''
-	#DEBUG---To be deleted later!!!
-	print("Entered the driver function")
-	print("--------------------------------")
-	print("model scores:")
-	print("Perceptron:",Perceptron.score(X_test_norm,Y_test))
-	print("SGDClassifier:",SGDClassifier.score(X_test_norm,Y_test))
-	print("PassiveAggressiveClassifier:",PassiveAggressiveClassifier.score(X_test_norm,Y_test))
-	print("================================")
-	'''
 
 socket_stream.foreachRDD(driver_function)
 
