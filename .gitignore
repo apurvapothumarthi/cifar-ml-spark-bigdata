@@ -2,3 +2,6 @@ log.txt
 __pycache__
 *.pyc
 *.sav
+*.csv
+inputs/
+stream.py

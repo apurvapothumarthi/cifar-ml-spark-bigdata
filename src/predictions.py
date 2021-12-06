@@ -37,7 +37,7 @@ def model_predictions(rdd):
 		pred = model.predict(X_test_norm)
 		print("model:",model)
 		print("metrics:")
-		metrics = cf.evaluation_metrics(pred,Y_test,range(10))
+		metrics = cf.evaluation_metrics(pred,Y_test)
 		print("Confusion matrix:",metrics[0],sep="\n")
 		print("Accuracy:",metrics[1],sep="\n")
 		print("Precisions:",metrics[2],sep="\n")
