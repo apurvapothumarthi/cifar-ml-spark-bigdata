@@ -72,12 +72,6 @@ def image_preprocess(batch_record):
 	return batch_record
 
 # Model Functions
-def models_init(*model_name_list):
-	'''
-	Hyperparameter tuning; initialize model objects
-	'''
-	pass
-
 def model_export(prefix,*model_list):
 	'''
 	Export model objects to individual files
@@ -86,7 +80,7 @@ def model_export(prefix,*model_list):
 		filename = '../models/'+prefix+'_model'+str(i+1)+'.sav'
 		pickle.dump(model_list[i],open(filename,'wb+'))
 
-def evaluation_metrics(pred,true,labels=None):
+def evaluation_metrics(pred,true):
 	'''
 	Returns list of [confusion matrix, accuracy, 
 			precision array, recall array,
